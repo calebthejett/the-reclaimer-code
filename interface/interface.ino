@@ -5,9 +5,8 @@
 
 LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7);
 
-volatile bool last_a = 0;
-volatile bool last_b = 0;
 volatile int32_t encoder_delta = 0;
+volatile bool sw_pushed = false;
 void setup() 
 { 
  pinMode(LCD_RS,OUTPUT);
@@ -26,10 +25,8 @@ void setup()
  pinMode(ENC_A, INPUT);
  pinMode(ENC_B, INPUT);
  pinMode(ENC_SW, INPUT_PULLUP);
- last_a = digitalRead(ENC_A);
- last_b = digitalRead(ENC_B);
  attachInterrupt(digitalPinToInterrupt(ENC_A),isrEncoder,CHANGE);
- 
+ attachInterrupt(digitalPinToInterrupt(ENC_SW),isrButton,FALLING);
  lcd.setCursor(0, 1);
  lcd.print("I2C CLAIM...    ");
  //Wire.begin(); //join i2c bus as master
@@ -40,7 +37,10 @@ void loop()
   /*static int32_t encoder_delta_last = 0;
   while(encoder_delta_last == encoder_delta)
   {}*/
+  while(!sw_pushed)
+  {}
   noInterrupts();
+  sw_pushed = false;
   //encoder_delta_last = encoder_delta;
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -57,7 +57,6 @@ void loop()
   lcd.print(" ");
   
   interrupts();
-  delay(100);
 }
 
 void isrEncoder()
@@ -66,4 +65,9 @@ void isrEncoder()
     encoder_delta++;
   else
     encoder_delta--;
+}
+
+void isrButton()
+{
+  sw_pushed=true;
 }
