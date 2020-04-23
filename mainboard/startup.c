@@ -1,6 +1,10 @@
 #ifndef STARTUP_C
 #define STARTUP_C
 
+#include "pins.h"
+
+#include <Arduino.h>
+
 
 void init_gpio()
 {
