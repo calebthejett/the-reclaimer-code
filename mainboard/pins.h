@@ -12,7 +12,7 @@
 #define PIN_ENCODER_A             D2
 #define PIN_ENCODER_B             D3
 
-// Grinder and DC Motor LSD Control
+// Grinder and Extruder DC Motor LSD Control
 #define PIN_GRIND                 D6
 #define PIN_EXTRUDE               D7
 
