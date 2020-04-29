@@ -1,5 +1,5 @@
-#define I2C_SLAVE_ADDRESS 0x10
-#define MSG_ESTOP 0x00
+
+#include "i2c.h"
 #include "pins.h"
 #include <TinyWireS.h>
 
@@ -24,7 +24,7 @@ void setup()
 
   TinyWireS.begin(I2C_SLAVE_ADDRESS);
   TinyWireS.onReceive(receiveEvent);
-  estop();
+  //estop();
 }
 
 void loop() 
@@ -40,10 +40,51 @@ void estop()
   digitalWrite(PIN_BUZZER,OFF_BUZZER);
   while(true)
   {
+    //SOS
+    //dit dit dit
     digitalWrite(PIN_BUZZER,ON_BUZZER);
     delay(100);
     digitalWrite(PIN_BUZZER,OFF_BUZZER);
-    delay(900);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(500);
+    
+    //dah dah dah
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(400);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(400);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(400);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(500);
+    
+    //dit dit dit
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,ON_BUZZER);
+    delay(100);
+    digitalWrite(PIN_BUZZER,OFF_BUZZER);
+    delay(500);
+
+    //rest
+    delay(1000);
   }
 }
 
