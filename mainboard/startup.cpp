@@ -1,5 +1,3 @@
-#ifndef STARTUP_C
-#define STARTUP_C
 
 #include "pins.h"
 
@@ -46,5 +44,3 @@ void init_gpio()
   digitalWrite(PIN_STAT0,LOW);
   
 }
-
-#endif
