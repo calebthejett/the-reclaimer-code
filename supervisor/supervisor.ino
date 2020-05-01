@@ -83,6 +83,7 @@ void loop()
       {
         if (message <= MSG_BEEP_OFFSET + 10)
         {
+          step = 0;
           beep_count = message - MSG_BEEP_OFFSET;
         }
         else
