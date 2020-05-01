@@ -118,6 +118,7 @@ void loop()
         estop();
       }
   }
+  message = 0xFF;
   if (beep_count)
   {
     //step 0: turn on buzzer, wait 100 msec
