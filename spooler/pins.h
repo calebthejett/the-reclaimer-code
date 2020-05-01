@@ -4,7 +4,6 @@
 #define PIN_SERVO PD5
 
 #define PIN_MSPIN PD6
-#define ON_MSPIN  HIGH
 
 #define PIN_D2 PB2
 #define ON_D2 HIGH
