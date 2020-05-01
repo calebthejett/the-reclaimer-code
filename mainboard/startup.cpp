@@ -11,7 +11,7 @@ void init_gpio()
   pinMode(PIN_EXTRUDER_IN_IR,INPUT);
   
   // AC Timing Signal Input
-  pinMode(PIN_AC_TIMING,INPUT);
+  pinMode(PIN_AC_TIMING,INPUT_PULLUP);
   
   // Encoder Inputs
   pinMode(PIN_ENCODER_A,INPUT);

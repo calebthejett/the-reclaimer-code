@@ -39,5 +39,9 @@ void loop()
   Serial.print('\t');
   Serial.print(32+9.0*get_tz(PIN_TZ4)/5.0);
   Serial.print('\t');
-  Serial.println(analogRead(PIN_TZ4));
+  Serial.print(analogRead(PIN_TZ4));
+  Serial.print('\t');
+  static uint32_t last_ac_pl = get_ac_pl();
+  Serial.println(get_ac_pl()-last_ac_pl);
+  last_ac_pl = get_ac_pl();
 }
