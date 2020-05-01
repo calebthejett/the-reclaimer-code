@@ -34,9 +34,9 @@ void setup()
 void loop() 
 {
   static uint8_t beep_count = 0;
-  static bool mainboard_ok = true;
-  static bool ifboard_ok = true;
-  static bool spoolboard_ok = true;
+  static bool mainboard_ok = false;
+  static bool ifboard_ok = false;
+  static bool spoolboard_ok = false;
   static uint8_t step = 0;
   
   switch (message)
