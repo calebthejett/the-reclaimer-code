@@ -37,6 +37,7 @@ void loop()
   static bool mainboard_ok = true;
   static bool ifboard_ok = true;
   static bool spoolboard_ok = true;
+  static uint8_t step = 0;
   
   switch (message)
   {
@@ -103,7 +104,6 @@ void loop()
     //step 2: if == beep_count/2, wait 500 msec and set step to 0, otherwise turn on buzzer and wait 100 msec
     // repeat step 1 and 2
     static long next_time = millis();
-    static uint8_t step = 0;
     if(millis() >= next_time)
     {
       if (step % 2)
