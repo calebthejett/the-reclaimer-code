@@ -42,18 +42,30 @@ void loop()
   switch (message)
   {
     case MSG_MAINBOARD_OK:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       mainboard_ok = true;
       break;
       
     case MSG_IFBOARD_OK:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       ifboard_ok = true;
       break;
       
     case MSG_SPOOLBOARD_OK:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       spoolboard_ok = true;
       break;
 
     case MSG_120V_ON:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       if (mainboard_ok && spoolboard_ok && ifboard_ok)
       {
         digitalWrite(PIN_120VEN,ON_120VEN);
@@ -61,6 +73,9 @@ void loop()
       break;
     
     case MSG_24V_ON:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       if (mainboard_ok && spoolboard_ok && ifboard_ok)
       {
         digitalWrite(PIN_24VEN,ON_24VEN);
@@ -69,10 +84,16 @@ void loop()
 
       
     case MSG_120V_OFF:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       digitalWrite(PIN_120VEN,OFF_120VEN);
       break;
       
     case MSG_24V_OFF:
+      digitalWrite(PIN_BUZZER,ON_BUZZER);
+      delay(50);
+      digitalWrite(PIN_BUZZER,OFF_BUZZER);
       digitalWrite(PIN_24VEN,OFF_24VEN);
       break;
       
