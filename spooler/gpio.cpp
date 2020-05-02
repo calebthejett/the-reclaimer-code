@@ -1,0 +1,115 @@
+#include "gpio.hpp"
+#include "pins.h"
+#include "common.hpp"
+
+#include <Servo.h>
+
+
+volatile long encoder_delta = 0;
+Servo servo;
+void init_gpio()
+{
+  pinMode(PIN_SERVO,OUTPUT);
+  servo.attach(PIN_SERVO);
+  
+  pinMode(PIN_MSPIN,OUTPUT);
+  digitalWrite(PIN_MSPIN,LOW);
+  
+  pinMode(PIN_D2,OUTPUT);
+  digitalWrite(PIN_D2,LOW);
+  
+  pinMode(PIN_D5,OUTPUT);
+  digitalWrite(PIN_D5,LOW);
+  
+  pinMode(PIN_ENC_A,INPUT);
+  pinMode(PIN_ENC_B,INPUT);
+  attachInterrupt(digitalPinToInterrupt(PIN_ENC_A),isr_enc_a,CHANGE);
+  
+  pinMode(PIN_24VFB,INPUT);
+}
+
+
+float get_24vfb()
+{
+  return (analogRead(PIN_24VFB)/1024.0)*MAX_24VFB;
+}
+
+
+void write_motor(float pct)
+{
+  analogWrite(PIN_MSPIN,255*min(1,max(0,pct)));
+}
+
+void isr_enc_a()
+{
+  encoder_delta += 1-2*(digitalRead(PIN_ENC_A) xor digitalRead(PIN_ENC_B));
+}
+
+#define SERVO_ARM 300.0 //mm
+#define FILAMENT_D 1.75 //mm
+void run()
+{
+  digitalWrite(PIN_D2,running);
+  if (running)
+  {
+    //filament is 1.75mm in diameter. We'll call it a square for easy math.
+    static float theta = 0;
+    static float r = spool_id;
+    static float y = 0;
+    static long last_time = millis();
+    static bool going_up = true;
+    
+    long dt = millis()-last_time;
+    last_time = millis();
+
+    //given a time delta in msec and a filament feed rate in mm/s, the circumferential distance traveled is (rate/dt)/1000
+    float travel = (spool_speed/dt)/1000.0;
+    // this means an angle of travel/r has been traveled
+    theta += (travel * 360.0)/(2*PI*r);
+    if (theta >= 360)
+    {
+      theta -= 360;
+      //a full rotation has occurred
+      if (going_up)
+      {
+        if (y+FILAMENT_D > spool_height)
+        {
+          //we're at the top
+          going_up = false;
+          r += FILAMENT_D;
+        }
+        else
+        {
+          y += FILAMENT_D;
+        }
+      }
+      else
+      {
+        if (y - FILAMENT_D < 0)
+        {
+          //we're at the bottom
+          going_up = true;
+          r += FILAMENT_D;
+        }
+        else
+        {
+          y -= FILAMENT_D;
+        }
+        
+      }
+      if (r > spool_od)
+      {
+        status = STAT_FULL;
+        running = false;
+        motor_speed = 0;
+        servo_angle = 0;
+      }
+    }
+    
+  }
+  write_motor(motor_speed); //without having an encoder for the motor, we'll just map speed in rpm to pwm percent...
+  servo.write(servo_angle);
+  
+  digitalWrite(PIN_D5,!(status==STAT_OK)); //red warning light if all is not well
+  
+}
