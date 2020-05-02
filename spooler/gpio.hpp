@@ -1,7 +1,7 @@
 #ifndef GPIO_HPP
 #define GPIO_HPP
 
-#define MAX_24VFB 26.27
+#define MAX_24VFB 34.133
 
 #include <Arduino.h>
 
@@ -22,6 +22,10 @@ void write_motor(float pct);
 
 void isr_enc_a();
 
+void calculate();
+
 void run();
+
+void reset();
 
 #endif

@@ -24,6 +24,8 @@
 #define MSG_RUN 0x50
 #define MSG_STOP 0x51
 
+#define MSG_RESET 0x60
+
 extern uint8_t status;
 extern float motor_speed;
 extern float servo_angle;

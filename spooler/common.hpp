@@ -9,6 +9,7 @@
 
 float bytes_to_float(byte * fourbytes);
 
+//#define DEBUG
 
 
 #endif
