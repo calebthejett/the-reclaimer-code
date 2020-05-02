@@ -10,4 +10,6 @@ float get_24vfb();
 
 void write_motor(float pct);
 
+void isr_enc_a();
+
 #endif
