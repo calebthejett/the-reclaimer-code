@@ -3,13 +3,25 @@
 
 #define MAX_24VFB 26.27
 
+#include <Arduino.h>
 
-void gpio_init();
+extern bool running;
+extern uint8_t status;
+extern float motor_speed;
+extern float servo_angle;
+extern float spool_speed;
+extern float spool_id;
+extern float spool_od;
+extern float spool_height;
+
+void init_gpio();
 
 float get_24vfb();
 
 void write_motor(float pct);
 
 void isr_enc_a();
+
+void run();
 
 #endif
