@@ -10,59 +10,82 @@ void handle_i2c()
 {
 }
 
-
-Param * params;
-uint8_t num_params = 0;
-
-
-
-uint8_t add_param(float value, uint8_t target)
+void tx_float(float value, byte address)
 {
-  if (num_params < MAX_PARAMS)
+  byte* data = (byte *) &value;
+  Wire.beginTransmission(address);
+  Wire.write(data[0]);
+  Wire.write(data[1]);
+  Wire.write(data[2]);
+  Wire.write(data[3]);
+  Wire.endTransmission();
+  delayMicroseconds(WRITE_DELAY);
+}
+
+void tx_byte(byte value, byte address)
+{
+  Wire.beginTransmission(address);
+  Wire.write(value);
+  Wire.endTransmission();
+  delayMicroseconds(WRITE_DELAY);
+}
+
+byte recv_float(byte address, float * value)
+{
+  byte val; // the code that the slave is responding to
+  byte recv[4];
+  Wire.requestFrom(address,5);
+  delay(READ_DELAY);
+  val = Wire.read();
+  for(int i = 0; i < 4; i++)
   {
-    params[num_params] = * new Param(value, target);
-    num_params++;
-    return num_params-1;
+    recv[i] = Wire.read();
   }
-  return 0xFF;
+  *value = bytes_to_float(recv);
+  return val;
 }
 
-void set_param(uint8_t param, float value)
+byte recv_byte(byte address, byte * value)
 {
-  params[param].set(value);
+  byte val; // the code that the slave is responding to
+  Wire.requestFrom(address,2);
+  delay(READ_DELAY);
+  val = Wire.read();
+  *value = Wire.read();
+  return val;
 }
 
-void tx_params()
+void get_float(byte request, byte address, float * value)
 {
-  for(int i = 0; i < num_params; i++)
-  {
-    params[i].tx();
-  }
+  tx_byte(request,address);
+  recv_float(address,value);
 }
 
-Param::Param(float s_value, uint8_t s_target)
+void get_byte(byte request, byte address, byte * value)
 {
-  value = s_value;
-  target = s_target;
-}
-void Param::set(float s_value)
-{
-  value = s_value;
-  updated = true;
+  tx_byte(request,address);
+  recv_byte(address,value);
 }
 
-void Param::tx()
+
+void send_float(float value, byte code, byte address)
 {
-  if (updated)
-  {
-    byte* data = (byte *) &value;
-    Wire.beginTransmission(target);
-    Wire.write(data[0]);
-    Wire.write(data[1]);
-    Wire.write(data[2]);
-    Wire.write(data[3]);
-    Wire.endTransmission();
-    delayMicroseconds(PARAM_WRITE_DELAY);
-    updated = true;
-  }
+  byte* data = (byte *) &value;
+  Wire.beginTransmission(address);
+  Wire.write(code);
+  Wire.write(data[0]);
+  Wire.write(data[1]);
+  Wire.write(data[2]);
+  Wire.write(data[3]);
+  Wire.endTransmission();
+  delayMicroseconds(WRITE_DELAY);
+  
+}
+void send_byte(byte value, byte code, byte address)
+{
+  Wire.beginTransmission(address);
+  Wire.write(code);
+  Wire.write(value);
+  Wire.endTransmission();
+  delayMicroseconds(WRITE_DELAY);
 }

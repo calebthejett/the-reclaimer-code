@@ -5,6 +5,8 @@ LiquidCrystal lcd(LCD_RS, LCD_EN, LCD_DB4, LCD_DB5, LCD_DB6, LCD_DB7);
 extern long enc_delta;
 extern bool button_pressed;
 
+char line_buffer[16];
+
 void start_lcd()
 {
   pinMode(LCD_RS,OUTPUT);
@@ -16,19 +18,15 @@ void start_lcd()
   lcd.begin(16,2);
 }
 
-Setting::Setting(char *s_caption, uint8_t s_caption_len, uint8_t s_decimals, float * s_target_val, float s_min_val, float s_max_val, float s_delta_val)
+Setting::Setting(const char s_caption[], uint8_t s_decimals, float * s_target_val, float s_min_val, float s_max_val, float s_delta_val)
 {
- for(int i = 0; i < s_caption_len; i++)
- {
-  caption[i] = s_caption[i];
- }
- caption_len = s_caption_len;
- target_val = s_target_val;
- new_val = *target_val;
- min_val = s_min_val;
- max_val = s_max_val;
- delta_val = s_delta_val;
- decimals = s_decimals;
+   caption = s_caption;
+   target_val = s_target_val;
+   new_val = *target_val;
+   min_val = s_min_val;
+   max_val = s_max_val;
+   delta_val = s_delta_val;
+   decimals = s_decimals;
 }
 
 bool Setting::handle()
@@ -46,7 +44,7 @@ bool Setting::handle()
     enc_delta = 0;
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print(caption);
+    lcd.print(read_progmem_string(caption));
     
     lcd.setCursor(0,1);
     lcd.print(*target_val,decimals);
@@ -59,14 +57,14 @@ bool Setting::handle()
 }
 
 
-List::List(String s_entries[], Menu * s_targets[],  int8_t s_num_entries, int8_t *s_selected)
+List::List(const char * const * const s_entries, Menu * s_targets[],  int8_t s_num_entries, int8_t *s_selected)
 {
   selected = s_selected;
   selection = *selected;
   num_entries = min(16,s_num_entries);
-  for(int i = 0; i < num_entries; i++)
+  entries = s_entries;
+  for (int i = 0; i < num_entries; i++)
   {
-    entries[i] = s_entries[i];
     targets[i] = s_targets[i];
   }
 }
@@ -94,21 +92,25 @@ bool List::handle()
       if ((selection < last_selection)|| (selection == 0))
       {
         lcd.print(">");
-        lcd.print(entries[selection]);
+        strcpy_P(line_buffer, (char *) pgm_read_word(&(entries[selection])));
+        lcd.print(line_buffer);
         if (num_entries >1)
         {
           lcd.setCursor(0,1);
           lcd.print(" ");
-          lcd.print(entries[selection+1]);
+          strcpy_P(line_buffer, (char *) pgm_read_word(&(entries[selection+1])));
+          lcd.print(line_buffer);
         }
       }
       else
       {
         lcd.print(" ");
-        lcd.print(entries[selection-1]);
+        strcpy_P(line_buffer, (char *) pgm_read_word(&(entries[selection-1])));
+        lcd.print(line_buffer);
         lcd.setCursor(0,1);
         lcd.print(">");
-        lcd.print(entries[selection]);
+        strcpy_P(line_buffer, (char *) pgm_read_word(&(entries[selection])));
+        lcd.print(line_buffer);
       }
       first_time = false;
     }
@@ -118,7 +120,6 @@ bool List::handle()
       *selected = selection;
       if (targets[selection] == NULL)
       {
-        
         return true;
       }
       targets[selection]->make_first_time();
