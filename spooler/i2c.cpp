@@ -5,7 +5,7 @@
 #include "gpio.hpp"
 
 volatile char i2c_buffer[I2C_BUFFER_LEN];
-uint8_t i2c_length;
+int i2c_length;
 
 volatile char resp_buffer[I2C_BUFFER_LEN];
 uint8_t resp_length;
@@ -40,7 +40,6 @@ void receiveEvent(int howMany)
 
 void requestEvent()
 {
-  Wire.write(resp_length);
   for (int i = 0; i < resp_length; i++)
   {
     Wire.write(resp_buffer[i]);
@@ -182,6 +181,11 @@ void proc_i2c()
       {
         i2c_length -=1;
         reset();
+        break;
+      }
+      default:
+      {
+        i2c_length -=1;
       }
     }
   }

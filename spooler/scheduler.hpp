@@ -29,7 +29,7 @@ class Scheduler
     uint8_t add_task( fp task, long deadline, long time_required);
     void remove_task(uint8_t task);
 
-    long run_task(uint8_t task);
+    void run_task(uint8_t task, bool readout);
 };
 
 #endif

@@ -73,18 +73,24 @@ void run()
   digitalWrite(PIN_D5,!(status==STAT_OK)); //red warning light if all is not well
 }
 
+bool just_started = true;
 void calculate()
 {
   if (running)
   {
+    if (just_started)
+    {
+      last_time = micros();
+    }
+    just_started = false;
+    long dt = micros()-last_time;
+    last_time = micros();
     r = max(r, spool_id);
     //filament is 1.75mm in diameter. We'll call it a square for easy math.
     
-    long dt = millis()-last_time;
-    last_time = millis();
 
     //given a time delta in msec and a filament feed rate in mm/s, the circumferential distance traveled is (rate/dt)/1000
-    float travel = (spool_speed*((float)dt))/1000.0;
+    float travel = (spool_speed*((float)dt))/1000000.0;
     // this means an angle of travel/r has been traveled
     theta += (travel * 360.0)/(2.0*PI*r);
     if (theta >= 360)
@@ -128,6 +134,10 @@ void calculate()
     }
     motor_speed = 360.0*spool_speed/(2.0*PI*r*60.0)/50.0;
     servo_angle = degrees(atan((y-spool_height/2.0)/SERVO_ARM))+90;
+  }
+  else
+  {
+    just_started = true;
   }
   
 }

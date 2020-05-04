@@ -84,16 +84,24 @@ void Scheduler::remove_task(uint8_t task)
   }
 }
 
-long Scheduler::run_task(uint8_t task)
+void Scheduler::run_task(uint8_t task, bool readout)
 {
   long start = micros();
   tasks[task]();
   long finish = micros();
-  
-  long slack_time = next_deadline[task] - finish;
-  
+  if (readout)
+  {
+    Serial.print(task); //what task ran
+    Serial.print(",");
+    Serial.print(last_run[task]); //what time it arrived
+    Serial.print(",");
+    Serial.print(start); //what time it started
+    Serial.print(",");
+    Serial.print(finish); //what time it finished
+    Serial.print(",");
+    Serial.println(next_deadline[task]); //what time it needed to finish by
+  }
+  time_required[task] = micros()-start;
   next_deadline[task] = finish+deadlines[task];
-  time_required[task] = finish-start;
-  
-  return slack_time;
+  last_run[task] = finish;
 }
