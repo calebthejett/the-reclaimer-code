@@ -4,7 +4,7 @@
 #include "i2c.hpp"
 #include "scheduler.hpp"
 
-//#define SCHEDULER_DEBUG
+#define SCHEDULER_DEBUG
 
 uint8_t status = STAT_OK;
 float motor_speed = 0;
@@ -28,7 +28,7 @@ void setup()
 
 void loop() 
 {
-  uint8_t task = scheduler.shortest_response_time();
+  uint8_t task = scheduler.least_slack_time();
 #ifdef SCHEDULER_DEBUG
   scheduler.run_task(task,true);
 #else

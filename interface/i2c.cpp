@@ -35,7 +35,6 @@ byte recv_float(byte address, float * value)
   byte val; // the code that the slave is responding to
   byte recv[4];
   Wire.requestFrom(address,5);
-  delay(READ_DELAY);
   val = Wire.read();
   for(int i = 0; i < 4; i++)
   {
@@ -49,7 +48,7 @@ byte recv_byte(byte address, byte * value)
 {
   byte val; // the code that the slave is responding to
   Wire.requestFrom(address,2);
-  delay(READ_DELAY);
+  delayMicroseconds(READ_DELAY);
   val = Wire.read();
   *value = Wire.read();
   return val;
@@ -64,6 +63,7 @@ void get_float(byte request, byte address, float * value)
 void get_byte(byte request, byte address, byte * value)
 {
   tx_byte(request,address);
+  delayMicroseconds(READ_DELAY);
   recv_byte(address,value);
 }
 

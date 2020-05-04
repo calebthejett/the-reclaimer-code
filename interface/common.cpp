@@ -1,5 +1,37 @@
 #include "common.hpp"
 
+bool running = false;
+bool run()
+{
+  running = !running;
+  if (running)
+  {
+    tx_byte(0x01,0x10);
+    delay(100);
+    tx_byte(0x02,0x10);
+    delay(100);
+    tx_byte(0x03,0x10);
+    delay(100);
+    tx_byte(0x04,0x10);
+    delay(100);
+    tx_byte(0x06,0x10);
+    delay(100);
+    tx_byte(0x50,0x11);
+    tx_byte(0x50,0x12);
+  }
+  else
+  {
+    tx_byte(0x05,0x10);
+    delay(100);
+    tx_byte(0x07,0x10);
+    delay(100);
+    tx_byte(0x51,0x11);
+    tx_byte(0x51,0x12);
+    tx_byte(0x60,0x11);
+  }
+  return true;
+}
+
 float bytes_to_float(byte * fourbytes)
 {
   union u_tag {

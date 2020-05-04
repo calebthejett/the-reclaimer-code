@@ -13,6 +13,8 @@
 
 #define STAT_READY 0xFF
 
+typedef void (*fp) (void);
+
 float bytes_to_float(byte * fourbytes);
 
 

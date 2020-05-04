@@ -6,7 +6,7 @@
 #include "common.hpp"
 
 #define I2C_ADDR 0x12
-#define I2C_BUFFER_LEN 16
+#define I2C_BUFFER_LEN 32
 
 #define MSG_GET_STATUS 0x10
 
@@ -22,10 +22,18 @@
 #define MSG_SET_SPEED 0x40
 #define MSG_SET_GRIND_SPEED 0x41
 #define MSG_SET_EXTRUDE_SPEED 0x42
+#define MSG_GET_EXTRUDE_SPEED 0x43
 
 #define MSG_RUN 0x50
 #define MSG_STOP 0x51
 
+
+extern float grind_speed;
+extern float extrude_speed;
+extern float target_h1;
+extern float target_h2;
+extern float target_h3;
+extern float speed;
 
 void proc_i2c();
 void requestEvent();

@@ -1,12 +1,11 @@
 #ifndef SCHEDULER_HPP
 #define SCHEDULER_HPP
+#include "common.hpp"
 
 #include <Arduino.h>
 
-#define MAX_TASKS 8
+#define MAX_TASKS 16
 
-
-typedef void (*fp) (void);
 
 void noop(); //exec assembly no-op function
 

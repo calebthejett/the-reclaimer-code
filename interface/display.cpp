@@ -137,3 +137,23 @@ bool List::handle()
   }
   return false;
 }
+
+
+
+Action::Action(fp_bool s_target, bool s_one_time=true)
+{
+  target = s_target;
+  one_time = s_one_time;
+}
+bool Action::handle()
+{
+  if (one_time)
+  {
+    target();
+    return true;
+  }
+  else
+  {
+    return target(); 
+  }
+}

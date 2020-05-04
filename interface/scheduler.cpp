@@ -1,7 +1,6 @@
 #include "scheduler.hpp"
 
 
-
 void noop() {__asm__("nop\n\t");}; //exec assembly no-op function
 
 uint8_t Scheduler::round_robin()

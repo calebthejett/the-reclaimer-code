@@ -51,6 +51,15 @@ class List : public Menu
     void make_first_time(){first_time = true;};
 };
 
+class Action : public Menu
+{
+  private:
+    fp_bool target;
+    bool one_time;
+  public:
+    Action(fp_bool s_target, bool s_one_time=true);
+    bool handle();
+};
 
 class Monitor : public Menu
 {

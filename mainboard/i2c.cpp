@@ -18,7 +18,7 @@ extern bool running;
 volatile char i2c_buffer[I2C_BUFFER_LEN];
 uint8_t i2c_length;
 
-volatile char resp_buffer[I2C_BUFFER_LEN];
+volatile byte resp_buffer[I2C_BUFFER_LEN];
 uint8_t resp_length;
 
 
@@ -35,11 +35,14 @@ void init_i2c()
 
 void receiveEvent(int howMany)
 {
+  //Serial.print("Rx: ");
   while (Wire.available())
   {
     if (i2c_length < I2C_BUFFER_LEN)
     {
       i2c_buffer[i2c_length] = Wire.read();
+      //Serial.print(i2c_buffer[i2c_length],HEX);
+      //Serial.print(" ");
       i2c_length++;
     }
     else
@@ -47,15 +50,19 @@ void receiveEvent(int howMany)
       status = STAT_I2C_ERR;
     }
   }
+  //Serial.println();
 }
 
 void requestEvent()
 {
-  Wire.write(resp_length);
+  //Serial.print("Tx: ");
   for (int i = 0; i < resp_length; i++)
   {
     Wire.write(resp_buffer[i]);
+    //Serial.print(resp_buffer[i],HEX);
+    //Serial.print(" ");
   }
+  //Serial.println();
 }
 
 
@@ -190,6 +197,18 @@ void proc_i2c()
         extrude_speed = bytes_to_float(data);
         break;
       }
+      case MSG_GET_EXTRUDE_SPEED:
+      {
+        i2c_length -= 1;
+        byte* data = (byte *) &extrude_speed;
+        resp_buffer[0] = MSG_GET_TZ4;
+        resp_buffer[1] = data[0];
+        resp_buffer[2] = data[1];
+        resp_buffer[3] = data[2];
+        resp_buffer[4] = data[3];
+        resp_length = 5;
+        break;
+      }
       case MSG_RUN:
       {
         i2c_length -= 1;
@@ -200,15 +219,19 @@ void proc_i2c()
       {
         i2c_length -= 1;
         running = false;
-        speed = 0;
+        //speed = 0;
         grind_speed = 0;
         extrude_speed = 0;
-        target_h1 = 0;
-        target_h2 = 0;
-        target_h3 = 0;
+        //target_h1 = 0;
+        //target_h2 = 0;
+        //target_h3 = 0;
         status = STAT_READY;
         
         break;
+      }
+      default:
+      {
+        i2c_length -=1;
       }
     }
   }

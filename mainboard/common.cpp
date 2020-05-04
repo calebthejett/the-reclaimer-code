@@ -2,6 +2,7 @@
 #include <Arduino.h>
 
 bool running = false;
+float speed = 0;
 
 uint8_t status = STAT_READY;
 
