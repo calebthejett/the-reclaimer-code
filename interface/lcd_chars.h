@@ -5,7 +5,7 @@
 #define HOURGLASS_FULL    1
 #define HOURGLASS_MID     2
 #define HOURGLASS_EMPTY   3
-const byte BACKSLASH_BYTES[8] = {
+/*const byte BACKSLASH_BYTES[8] = {
   0b00000,
   0b10000,
   0b01000,
@@ -47,5 +47,5 @@ const byte HOURGLASS_EMPTY_BYTES[8] = {
   0b01110,
   0b01110,
   0b11111
-};
+};*/
 #endif

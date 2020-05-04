@@ -1,5 +1,6 @@
 #ifndef PINS_H
 #define PINS_H
+#include <Arduino.h>
 
 //LCD pins
 #define LCD_DB4           A0
