@@ -35,7 +35,7 @@ Setting h1_set = Setting(h1_set_txt, 0, &h1, 0, 250, 1);
 Setting h2_set = Setting(h2_set_txt, 0, &h2, 0, 250, 1);
 Setting h3_set = Setting(h3_set_txt, 0, &h3, 0, 250, 1);
 
-const char h_menu_text_1[] PROGMEM = "<";
+const char h_menu_text_1[] PROGMEM = "Back";
 const char h_menu_text_2[] PROGMEM = "Heater 1";
 const char h_menu_text_3[] PROGMEM = "Heater 2";
 const char h_menu_text_4[] PROGMEM = "Heater 3";
@@ -54,7 +54,7 @@ Setting spool_ir_set = Setting(spool_ir_set_txt, 1, &spool_ir, 5, 500, 0.5);
 Setting spool_or_set = Setting(spool_or_set_txt, 1, &spool_or, 10, 500, 0.5);
 Setting spool_height_set = Setting(spool_height_set_txt, 1, &spool_height, 5, 500, 0.5);
 
-const char spool_text_1[] PROGMEM = "<";
+const char spool_text_1[] PROGMEM = "Back";
 const char spool_text_2[] PROGMEM = "Inner Size";
 const char spool_text_3[] PROGMEM = "Outer Size";
 const char spool_text_4[] PROGMEM = "Height";
@@ -69,11 +69,11 @@ List spool_menu = List(spool_text, spool_items, 4, &spool_selection);
 const char speed_set_txt[] PROGMEM = "Speed (mm/sec)";
 Setting speed_set = Setting(speed_set_txt, 1, &speed, 5, 1000, 1);
 
-const char settings_text_1[] PROGMEM = "<";
+const char settings_text_1[] PROGMEM = "Back";
 const char settings_text_2[] PROGMEM = "Thermal Zones";
 const char settings_text_3[] PROGMEM = "Spool Size";
 const char settings_text_4[] PROGMEM = "Extrude Speed";
-const char * const  settings_text[] PROGMEM = {settings_text_1,settings_text_2,settings_text_3,settings_text_4};
+const char * const  settings_text[] PROGMEM = {settings_text_1, settings_text_2, settings_text_3, settings_text_4};
 
 Menu * settings_items[4] = {NULL, &h_menu, &spool_menu, &speed_set};
 
@@ -83,13 +83,32 @@ List settings_menu = List(settings_text, settings_items, 4, &settings_selection)
 ////////////////////////////////////////////////////////////////////
 Action run_act = Action(&run, true);
 
+const char tz1_mon_text[] PROGMEM = "Therm Zone 1 (C)";
+Monitor tz1_mon = Monitor(tz1_mon_text,&tz1);
+const char tz2_mon_text[] PROGMEM = "Therm Zone 2 (C)";
+Monitor tz2_mon = Monitor(tz2_mon_text,&tz2);
+const char tz3_mon_text[] PROGMEM = "Therm Zone 3 (C)";
+Monitor tz3_mon = Monitor(tz3_mon_text,&tz3);
+const char tz4_mon_text[] PROGMEM = "Therm Zone 4 (C)";
+Monitor tz4_mon = Monitor(tz4_mon_text,&tz4);
+const char speed_mon_text[] PROGMEM = "Speed (mm/s)";
+Monitor speed_mon = Monitor(speed_mon_text,&extrude_speed);
+const char v24_mon_text[] PROGMEM = "24 Vbus voltage";
+Monitor v24_mon = Monitor(v24_mon_text,&v24);
+
 const char main_menu_text_1[] PROGMEM = "Run/Stop";
 const char main_menu_text_2[] PROGMEM = "Settings";
-const char * const  main_menu_text[] PROGMEM = {main_menu_text_1,main_menu_text_2};
-Menu * main_menu_items[] = {&run_act, &settings_menu};
+const char main_menu_text_3[] PROGMEM = "Monitor Tz1";
+const char main_menu_text_4[] PROGMEM = "Monitor Tz2";
+const char main_menu_text_5[] PROGMEM = "Monitor Tz3";
+const char main_menu_text_6[] PROGMEM = "Monitor Tz4";
+const char main_menu_text_7[] PROGMEM = "Monitor speed";
+const char main_menu_text_8[] PROGMEM = "Monitor 24vbus";
+const char * const  main_menu_text[] PROGMEM = {main_menu_text_1, main_menu_text_2, main_menu_text_3, main_menu_text_4, main_menu_text_5, main_menu_text_6, main_menu_text_7, main_menu_text_8};
+Menu * main_menu_items[] = {&run_act, &settings_menu, &tz1_mon, &tz2_mon, &tz3_mon, &tz4_mon, &speed_mon, &v24_mon};
 
 int8_t main_menu_selection = 0;
-List main_menu = List(main_menu_text, main_menu_items, 2, &main_menu_selection);
+List main_menu = List(main_menu_text, main_menu_items, 8, &main_menu_selection);
 /*bool running = true;
 bool params_changed = true;
 float spool_id = 25;
@@ -115,28 +134,27 @@ void setup()
   start_encoder();
   start_lcd();
   
-  scheduler.add_task(handle_display,20000,5000);
-  scheduler.add_task(handle_i2c,2000,500);
+  scheduler.add_task(handle_display,100000,5000);
   
-  scheduler.add_task(update_h1,20000,500);
-  scheduler.add_task(update_h2,20000,500);
-  scheduler.add_task(update_h3,20000,500);
-  scheduler.add_task(update_speed,20000,500);
+  scheduler.add_task(update_h1,250000,5000);
+  scheduler.add_task(update_h2,250000,5000);
+  scheduler.add_task(update_h3,250000,5000);
+  scheduler.add_task(update_speed,250000,5000);
   
-  scheduler.add_task(update_spool_ir,20000,500);
-  scheduler.add_task(update_spool_or,20000,500);
-  scheduler.add_task(update_spool_height,20000,500);
-  scheduler.add_task(update_spool_speed,20000,500);
+  scheduler.add_task(update_spool_ir,500000,5000);
+  scheduler.add_task(update_spool_or,500000,5000);
+  scheduler.add_task(update_spool_height,5000000,5000);
+  scheduler.add_task(update_spool_speed,500000,5000);
  
-  scheduler.add_task(update_tz1,1000000,1000);
-  scheduler.add_task(update_tz2,1000000,1000);
-  scheduler.add_task(update_tz3,1000000,1000);
-  scheduler.add_task(update_tz4,1000000,1000);
-  scheduler.add_task(update_extrude_speed,10000,500);
-  scheduler.add_task(update_main_status,10000,500);
+  scheduler.add_task(update_tz1,2000000,10000);
+  scheduler.add_task(update_tz2,2000000,10000);
+  scheduler.add_task(update_tz3,2000000,10000);
+  scheduler.add_task(update_tz4,2000000,10000);
+  scheduler.add_task(update_extrude_speed,250000,5000);
+  scheduler.add_task(update_main_status,2000000,5000);
   
-  scheduler.add_task(update_spool_status,100000,5000);
-  scheduler.add_task(update_v24,10000,5000);
+  scheduler.add_task(update_spool_status,2000000,5000);
+  scheduler.add_task(update_v24,2000000,5000);//*/ 
 }
 
 void loop()
@@ -263,7 +281,6 @@ void update_extrude_speed()
 void update_v24()
 {
   get_float(0x10, 0x11, & v24);
-  Serial.println(v24);
 }
 
 void update_spool_status()

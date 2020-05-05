@@ -79,13 +79,13 @@ bool List::handle()
         last_selection = selection;
   
         selection -= enc_delta;
-        enc_delta = 0;
         
         if (selection >= num_entries)
           selection = 0;
         if (selection < 0)
           selection = num_entries - 1;
       }
+      enc_delta = 0;
         
       lcd.clear();
       lcd.setCursor(0,0);
@@ -139,6 +139,43 @@ bool List::handle()
 }
 
 
+Monitor::Monitor(const char * const s_caption, float * s_value, int interval_millis = 1000)
+{
+  interval = interval_millis;
+  caption = s_caption;
+  value = s_value;
+}
+bool Monitor::handle()
+{
+  static long last_time = millis();
+  if(first_time)
+  {
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print(read_progmem_string(caption));
+      
+  }
+  if ((millis()-last_time >= interval) || first_time)
+  {
+    static float last_val = *value+1;
+    if ((last_val != *value) || first_time)
+    {
+      lcd.setCursor(0,1);
+      lcd.print(*value);
+      lcd.print("                ");
+      last_val = *value;
+      last_time = millis();
+    }
+  }
+  first_time = false;
+  if(button_pressed)
+  {
+    first_time = false;
+    button_pressed = false;
+    return true;
+  }
+  return false;
+}
 
 Action::Action(fp_bool s_target, bool s_one_time=true)
 {

@@ -5,7 +5,7 @@
 #include "pins.h"
 #include "common.hpp"
 
-#define MAX_ENTRIES 4
+#define MAX_ENTRIES 8
 
 
 void start_lcd();
@@ -64,17 +64,17 @@ class Action : public Menu
 class Monitor : public Menu
 {
  private:
-    String entries[MAX_ENTRIES];
-    float * values[MAX_ENTRIES];
-    int8_t selection = 0;
-    int8_t num_entries;
+    const char * caption;
+    float * value;
+    int interval;
   /*   
   public:
     List(String * s_entries, int8_t s_num_entries);
     bool handle();
     int8_t get_value();*/
   public:
-    bool first_time;
+    Monitor(const char * const s_caption, float * s_value, int interval_millis = 1000);
+    bool first_time = true;
     bool handle();
     void make_first_time(){first_time = true;};
 };

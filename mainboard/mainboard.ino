@@ -21,7 +21,7 @@ void setup()
   scheduler.add_task(handle_extruder,100000,10000);
 }
 
-#define SCHEDULER_DEBUG
+//#define SCHEDULER_DEBUG
 
 void loop() 
 {

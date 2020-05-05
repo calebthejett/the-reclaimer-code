@@ -6,9 +6,6 @@ void start_i2c()
   Wire.begin();
 }
 
-void handle_i2c()
-{
-}
 
 void tx_float(float value, byte address)
 {

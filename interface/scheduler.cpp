@@ -14,7 +14,7 @@ uint8_t Scheduler::round_robin()
   return last_task;
 }
 
-uint8_t Scheduler::shortest_response_time()
+uint8_t Scheduler::least_slack_time()
 {
   uint8_t chosen_task = 0;
   long chosen_srt = 2147483646; //max out the long
